@@ -36,3 +36,4 @@ temp/
 
 # Arquivos gerados pelo NestJS CLI (opcional)
 .nest/
+/generated/prisma
