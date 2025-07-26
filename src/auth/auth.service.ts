@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
@@ -7,6 +7,8 @@ import { AuthResponseDto } from './dto/auth-response.dto';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
@@ -15,6 +17,7 @@ export class AuthService {
   async validateUser(email: string, password: string) {
     const user = await this.prisma.user.findUnique({ where: { email } });
     if (!user || !(await bcrypt.compare(password, user.password))) {
+      this.logger.warn(`Invalid credentials for email: ${email}`);
       throw new UnauthorizedException('Credenciais inválidas.');
     }
 
@@ -24,14 +27,20 @@ export class AuthService {
   }
 
   async login(dto: LoginDto): Promise<AuthResponseDto> {
-    const user = await this.validateUser(dto.email, dto.password);
+    try {
+      const user = await this.validateUser(dto.email, dto.password);
+      const payload = { sub: user.id, role: user.role };
+      const token = this.jwtService.sign(payload);
 
-    const payload = { sub: user.id, role: user.role };
-    const token = this.jwtService.sign(payload);
+      this.logger.log(`User ${user.email} logged in successfully.`);
 
-    return {
-      accessToken: token,
-      user,
-    };
+      return {
+        accessToken: token,
+        user,
+      };
+    } catch (error) {
+      this.logger.error(`Login failed for email: ${dto.email}`);
+      throw error;
+    }
   }
 }
