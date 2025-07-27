@@ -1,10 +1,6 @@
 # JWT Access Manager
 
-**JWT Access Manager** é uma API RESTful desenvolvida com
-[NestJS](https://nestjs.com/) para cadastro, autenticação e gerenciamento de
-usuários com base em tokens JWT. O sistema implementa controle de acesso baseado
-em perfis de usuário (administrador e usuário comum), seguindo boas práticas de
-arquitetura e segurança.
+**JWT Access Manager** é uma API RESTful desenvolvida com [NestJS](https://nestjs.com/) para cadastro, autenticação e gerenciamento de usuários com base em tokens JWT. O sistema implementa controle de acesso baseado em perfis de usuário (administrador e usuário comum), seguindo boas práticas de arquitetura e segurança.
 
 ---
 
@@ -12,27 +8,28 @@ arquitetura e segurança.
 
 O sistema possui as seguintes características principais:
 
-- Cadastro de usuários com validação de senha.
-- Autenticação e geração de tokens JWT.
-- Autorização baseada em perfil de usuário (admin e usuário comum).
-- CRUD completo para administradores e acesso restrito para usuários comuns.
-- Logs de atividades e tratamento padronizado de exceções.
-- Camadas bem definidas: Controllers, Services, Repositories, DTOs e Entities.
-- ORM Prisma com suporte a MySQL (padrão) e PostgreSQL (alternativo).
-- Testes unitários com Jest.
+* Cadastro de usuários com validação de senha.
+* Autenticação e geração de tokens JWT.
+* Autorização baseada em perfil de usuário (admin e usuário comum).
+* CRUD completo para administradores e acesso restrito para usuários comuns.
+* Logs de atividades e tratamento padronizado de exceções.
+* Camadas bem definidas: Controllers, Services, Repositories, DTOs e Entities.
+* ORM Prisma com suporte a MySQL (padrão) e PostgreSQL (alternativo).
+* Testes unitários com Jest.
 
 ---
 
 ## ⚙️ Tecnologias Utilizadas
 
-- **Node.js**
-- **NestJS**
-- **Prisma ORM**
-- **MySQL / PostgreSQL**
-- **JWT**
-- **Bcrypt**
-- **Jest** (para testes)
-- **dotenv** (configuração via variáveis de ambiente)
+* **Node.js**
+* **NestJS**
+* **Prisma ORM**
+* **MySQL**
+* **JWT**
+* **Bcrypt**
+* **Jest**
+* **dotenv**
+* **Docker**
 
 ---
 
@@ -40,30 +37,31 @@ O sistema possui as seguintes características principais:
 
 ### 👤 Cadastro de Usuário
 
-- Nome, e-mail e senha (com validação de complexidade).
-- Senhas criptografadas com Bcrypt.
+* Nome, e-mail e senha (com validação de complexidade).
+* Senhas criptografadas com Bcrypt.
 
 ### 🔐 Autenticação
 
-- Login com e-mail e senha.
-- Geração de token JWT contendo o papel (admin ou comum).
+* Login com e-mail e senha.
+* Geração de token JWT contendo o papel (admin ou comum).
 
 ### 🛡️ Autorização
 
-- Permissões baseadas em perfil:
-  - **Administrador**: pode gerenciar todos os usuários.
-  - **Usuário comum**: pode acessar e modificar apenas seu próprio perfil.
+* Permissões baseadas em perfil:
+
+  * **Administrador**: pode gerenciar todos os usuários.
+  * **Usuário comum**: pode acessar e modificar apenas seu próprio perfil.
 
 ### 🧾 Logs
 
-- Tentativas de login (sucesso e falha).
-- Ações de criação, atualização e exclusão.
-- Erros não tratados.
+* Tentativas de login (sucesso e falha).
+* Ações de criação, atualização e exclusão.
+* Erros não tratados.
 
 ### ⚠️ Tratamento de Erros
 
-- Mensagens padronizadas com código, descrição e timestamp.
-- Diferenciação entre erros de autenticação, validação e sistema.
+* Mensagens padronizadas com código, descrição e timestamp.
+* Diferenciação entre erros de autenticação, validação e sistema.
 
 ---
 
@@ -100,11 +98,12 @@ src/
 
 ## 🧪 Testes
 
-- Framework: **Jest** (nativo do NestJS)
-- Cobertura de:
-  - Serviços (regras de negócio)
-  - Validações de dados
-  - Autenticação e autorização
+* Framework: **Jest** (nativo do NestJS)
+* Cobertura de:
+
+  * Serviços (regras de negócio)
+  * Validações de dados
+  * Autenticação e autorização
 
 ---
 
@@ -120,7 +119,9 @@ DB_TYPE=mysql
 PORT=3000
 ```
 
-## 🚀 Como Executar o Projeto
+---
+
+## 🚀 Como Executar o Projeto (sem Docker)
 
 ### 1. Clonar o repositório
 
@@ -154,7 +155,57 @@ npm run start:dev
 
 ---
 
+## 🚀 Como Executar Localmente com Docker
+
+### 1. Pré-requisitos
+
+* Docker e Docker Compose instalados
+
+### 2. Clonar o projeto
+
+```bash
+git clone https://github.com/rogeriobgregorio/jwt-access-manager.git
+cd jwt-access-manager
+```
+
+### 3. Criar o arquivo `.env`
+
+Crie um `.env` na raiz com o conteúdo:
+
+```env
+DATABASE_URL=mysql://root:root@db:3306/nestdb
+JWT_SECRET=supersecreta
+JWT_EXPIRES_IN=1h
+NODE_ENV=development
+```
+
+> ⚠️ O `DATABASE_URL` deve coincidir com as configurações do `docker-compose.yml`.
+
+### 4. Subir o ambiente
+
+```bash
+sh scripts/dev.sh
+```
+
+A aplicação estará disponível em:
+
+```
+http://localhost:3000
+```
+
+---
+
+## 🧪 Scripts Disponíveis
+
+| Comando                  | Ação                              |
+| ------------------------ | --------------------------------- |
+| `sh scripts/dev.sh`      | Sobe o app e banco via Docker     |
+| `sh scripts/migrate.sh`  | Executa as migrações do Prisma    |
+| `sh scripts/generate.sh` | Gera novamente o client do Prisma |
+
+---
+
 ## 📜 Licença
 
-Este projeto está licenciado sob a licença MIT. Veja o arquivo
-[LICENSE](LICENSE) para mais detalhes.
+Este projeto está licenciado sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
