@@ -1,4 +1,5 @@
 # JWT Access Manager
+[![Status](https://img.shields.io/badge/Status-Concluído-brightgreen.svg)](https://github.com/seu-usuario/seu-projeto)
 
 **JWT Access Manager** é uma API RESTful desenvolvida com [NestJS](https://nestjs.com/) para cadastro, autenticação e gerenciamento de usuários com base em tokens JWT. O sistema implementa controle de acesso baseado em perfis de usuário (administrador e usuário comum), seguindo boas práticas de arquitetura e segurança.
 
