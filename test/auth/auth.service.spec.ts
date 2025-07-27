@@ -1,7 +1,6 @@
-// src/auth/auth.service.spec.ts
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from './auth.service';
-import { PrismaService } from '../prisma/prisma.service';
+import { AuthService } from '../../src/auth/auth.service';
+import { PrismaService } from '../../src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
@@ -13,7 +12,7 @@ describe('AuthService', () => {
     name: 'Admin',
     email: 'admin@email.com',
     role: 'ADMIN',
-    password: await bcrypt.hash('Senha@123', 10),
+    password: bcrypt.hash('Senha@123', 10),
   };
 
   const prisma = {
@@ -40,7 +39,7 @@ describe('AuthService', () => {
 
   it('deve autenticar e retornar token', async () => {
     const dto = { email: mockUser.email, password: 'Senha@123' };
-    jest.spyOn(bcrypt, 'compare').mockResolvedValue(true);
+    (jest.spyOn(bcrypt, 'compare') as jest.Mock).mockResolvedValue(true);
 
     const result = await service.login(dto);
     expect(result.accessToken).toBeDefined();

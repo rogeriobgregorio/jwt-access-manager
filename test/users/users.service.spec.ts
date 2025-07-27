@@ -27,7 +27,7 @@ describe('UsersService', () => {
     };
 
     const hashed = await bcrypt.hash(dto.password, 10);
-    jest.spyOn(bcrypt, 'hash').mockResolvedValueOnce(hashed);
+    (jest.spyOn(bcrypt, 'hash') as jest.Mock).mockResolvedValueOnce(hashed);
 
     const userMock: User = {
       id: '1',
@@ -45,6 +45,7 @@ describe('UsersService', () => {
 
     expect(result).toHaveProperty('id');
     expect(result).not.toHaveProperty('password');
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(prisma.user.create).toHaveBeenCalled();
   });
 });
